@@ -13,21 +13,23 @@ function initServices() {
     return;
   }
 
-  if(!initServices.services.spawnManager) {
-    console.log("Initializing services");
-    var spawnManager = new StaticSpawner();
-    initServices.services = {
-      spawnManager: spawnManager,
-      roleManager: new RoleManager(),
-      garbageCollector: new GarbageCollector(),
-      towerManager: new DefaultTowerManager(),
-      sourceManager: new SourceManager()
-    }
-
-    spawnManager.loadQueue();
+  if(initServices.services.spawnManager) {
+    Game.services = initServices.services;
+    return;
   }
-  Game.services = initServices.services;
 
+  console.log("Initializing services");
+
+  var spawnManager = new StaticSpawner();
+  Game.services = initServices.services = {
+    spawnManager: spawnManager,
+    roleManager: new RoleManager(),
+    garbageCollector: new GarbageCollector(),
+    towerManager: new DefaultTowerManager(),
+    sourceManager: new SourceManager()
+  }
+
+  spawnManager.loadQueue();
 }
 initServices.services = <IGameServices>{};
 

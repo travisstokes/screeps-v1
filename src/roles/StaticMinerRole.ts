@@ -1,11 +1,14 @@
+import { ISpawnData } from "interfaces/ISpawnData";
 import { BaseRole } from "./BaseRole";
 
 export class StaticMiner extends BaseRole{
     roleName: string = "static-miner";
-    protected performSpawn(spawnerName: string, creepName: string): ScreepsReturnCode {
-        return Game.spawns[spawnerName].spawnCreep([WORK, WORK, WORK, WORK, WORK, CARRY, MOVE], creepName, { memory: { role: this.roleName } });
+    getSpawnData(maxEnergy: number): ISpawnData {
+        return {body: [WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE]};
     }
     run(creep: Creep): void {
+        if(creep.spawning) {return;}
+
         if(!creep.memory.assignedSource) {
             Game.services.sourceManager.assignSource(creep);
         }
@@ -15,8 +18,11 @@ export class StaticMiner extends BaseRole{
             return;
         }
 
-        var assignedSource = Game.getObjectById(creep.memory.assignedSource) as Source;
+        if(creep.memory.movingTo && creep.pos.inRangeTo(creep.memory.movingTo, 0)) {
+            creep.memory.movingTo = undefined;
+        }
 
+        var assignedSource = Game.getObjectById(creep.memory.assignedSource) as Source;
         if(creep.harvest(assignedSource) == ERR_NOT_IN_RANGE) {
             creep.moveTo(assignedSource);
         } else {
@@ -24,4 +30,3 @@ export class StaticMiner extends BaseRole{
         }
     }
 }
-

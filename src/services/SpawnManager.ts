@@ -1,15 +1,17 @@
-import { NumericDictionary, trim } from "lodash";
+import { add, NumericDictionary, trim } from "lodash";
+import { threadId } from "worker_threads";
 import { IRole } from "../interfaces/IRole";
 
 export interface ISpawner {
-  addByRole(role: IRole) : void;
-  addByRoleName(roleName: string) : void;
+  addByRole(role: IRole, priority?: number, memory?: CreepMemory) : void;
+  addByRoleName(roleName: string, priority?: number, memory?: CreepMemory) : void;
   processQueue(): void;
 }
 
 interface SpawnQueueEntry {
   roleToSpawn: IRole;
   priority: number;
+  memory?: CreepMemory;
 }
 
 interface SpawnQueuePersistenceEntry {
@@ -19,6 +21,7 @@ interface SpawnQueuePersistenceEntry {
 
 export class StaticSpawner implements ISpawner {
   spawnQueue = new Array<SpawnQueueEntry>();
+  nextId: number = Game?.time ?? 1;
 
   loadQueue() {
     if(Memory.spawnQueue && trim(Memory.spawnQueue)){
@@ -38,45 +41,49 @@ export class StaticSpawner implements ISpawner {
     );
   }
 
-  addByRole(role: IRole, priority: number = 0) {
+  addEntry(newEntry: SpawnQueueEntry) {
     var insertIndex = -1;
-    if(priority > 0)    {
-      insertIndex = this.spawnQueue.findIndex(entry => entry.priority < priority);
+    if(newEntry.priority > 0)    {
+      insertIndex = this.spawnQueue.findIndex(entry => entry.priority < newEntry.priority);
     }
 
-    const newQueueEntry = { roleToSpawn: role, priority: priority };
-
-    console.log(`Queuing ${role.roleName} at index ${insertIndex}`);
+    console.log(`Queuing ${newEntry.roleToSpawn.roleName} at index ${insertIndex}`);
     if(insertIndex > -1) {
-      this.spawnQueue.splice(insertIndex, 0, newQueueEntry);
+      this.spawnQueue.splice(insertIndex, 0, newEntry);
       this.saveQueue();
       return;
     }
 
-    this.spawnQueue.push(newQueueEntry);
+    this.spawnQueue.push(newEntry);
     this.saveQueue();
   }
 
-  addByRoleName(roleName: string, priority: number = 0) {
+  addByRole(role: IRole, priority: number = 0, memory?: CreepMemory) {
+    this.addEntry({ roleToSpawn: role, priority: priority, memory: memory });
+  }
+
+  addByRoleName(roleName: string, priority: number = 0, memory?: CreepMemory) {
     console.log(`Finding role ${roleName}`);
     var role = Game.services.roleManager.byName(roleName);
     if(role) {
-      this.addByRole(role, priority);
+      this.addByRole(role, priority, memory);
     }
   }
 
   processQueue() {
     if (this.spawnQueue.length) {
-      console.log(`Processing spawn queue (${this.spawnQueue.length} item(s))`);
-      var entry = this.spawnQueue.shift()
-      if(entry && !entry.roleToSpawn.spawn("Spawn1", 0)) {
+      var entry = this.spawnQueue.shift() as SpawnQueueEntry;
+      var spawnData = entry.roleToSpawn.getSpawnData(0);
+
+      console.log(`Spawning new ${entry.roleToSpawn.roleName}`);
+      var creepInstanceName = `${entry.roleToSpawn.roleName}_${this.nextId++}`;
+
+      var creepMemory = entry.memory ?? {role: entry.roleToSpawn.roleName};
+
+      if(Game.spawns["Spawn1"].spawnCreep(spawnData.body, creepInstanceName, { memory: creepMemory }) != OK) {
         console.log(`${entry.roleToSpawn.roleName} spawn failed, re-inserting into queue`);
-
-        if(entry.priority > 0) {
-          this.spawnQueue.unshift(entry);
-        }
+        this.addByRole(entry.roleToSpawn, entry.priority);
       }
-
       this.saveQueue();
     }
   }

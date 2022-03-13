@@ -1,5 +1,7 @@
+import { ISpawnData } from "./ISpawnData";
+
 export interface IRole {
   run(creep: Creep): void;
   roleName: string;
-  spawn(spawnerName: string, maxEnergy: number): boolean;
+  getSpawnData(maxEnergy: number): ISpawnData;
 }

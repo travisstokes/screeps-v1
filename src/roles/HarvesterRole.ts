@@ -1,20 +1,25 @@
+import { createPrivateKey } from "crypto";
 import { IRole } from "interfaces/IRole";
-import { createSecurePair } from "tls";
+import { ISpawnData } from "interfaces/ISpawnData";
 import { BaseRole } from "./BaseRole";
 
 export class HarvesterRole extends BaseRole {
-  idleRole?: IRole;
   roleName: string = "harvester";
 
-  constructor(idleRole?: IRole){
-    super();
-    this.idleRole = idleRole;
+  getSpawnData(maxEnergy: number): ISpawnData {
+      return {body: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]};
   }
 
-  protected performSpawn(spawnerName: string, creepName: string): ScreepsReturnCode {
-    return Game.spawns[spawnerName].spawnCreep([WORK, WORK, CARRY, CARRY, MOVE, MOVE], creepName, { memory: { role: this.roleName } });
-  }
   run(creep: Creep): void {
+    if(creep.spawning) {return;}
+
+    if(!creep.memory.assignedSource) {
+      console.log("attempting source assign");
+      Game.services.sourceManager.assignSource(creep);
+    }
+
+    creep.memory.preventRespawn = !creep.memory.assignedSource;
+
     if ((creep.memory.upgrading || creep.memory.building) && creep.store[RESOURCE_ENERGY] == 0) {
       creep.memory.upgrading = false;
       creep.memory.building = false;
@@ -22,34 +27,31 @@ export class HarvesterRole extends BaseRole {
     }
 
     if (!creep.memory.upgrading && !creep.memory.building && creep.store.getFreeCapacity() > 0) {
-      var sources = creep.room.find(FIND_SOURCES);
-      var source;
-
-      if(creep.memory.destination && (source = Game.getObjectById(creep.memory.destination))) {
-          switch (creep.harvest(source)) {
-            case OK:
-              return;
-            case ERR_NOT_IN_RANGE:
-              creep.moveTo(source);
-              return;
-            default:
-              creep.memory.destination = undefined;
-              break;
-          }
+      if(creep.memory.movingTo) {
+        console.log("Moving to is set");
+        if(!creep.pos.inRangeTo(creep.memory.movingTo, 1)) {
+          console.log(`Not in range, moving to: ${JSON.stringify(creep.memory.movingTo)}`);
+          console.log(`Move result: ${creep.moveTo(creep.memory.movingTo.x, creep.memory.movingTo.y, { visualizePathStyle: { stroke: '#ffaa00' } })}`);
+          return;
+        }
+        creep.memory.movingTo = undefined;
       }
 
-      for(var possibleSource of sources) {
-        var result = creep.harvest(possibleSource);
+      if(creep.memory.assignedSource) {
+          var assignedSource = Game.getObjectById(creep.memory.assignedSource) as Source;
+          if(creep.harvest(assignedSource) == ERR_NOT_IN_RANGE)
+          {
+            creep.moveTo(assignedSource);
+          }
+          return;
+      }
 
-        if(result == ERR_NOT_ENOUGH_RESOURCES) {
-          continue;
-        }
+      var sources = creep.room.find(FIND_SOURCES, { filter: (s) => s.energy > 0 });
+      var source = _.min(sources, s => creep.pos.getRangeTo(s.pos));
 
-        if(result == ERR_NOT_IN_RANGE) {
-          creep.moveTo(possibleSource, { visualizePathStyle: { stroke: '#ffaa00' } });
-          creep.memory.destination = possibleSource.id;
-          break;
-        }
+      if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(source, { visualizePathStyle: { stroke: '#ffaa00' } });
+        return;
       }
     }
     else {
@@ -58,9 +60,19 @@ export class HarvesterRole extends BaseRole {
           return (structure.structureType == STRUCTURE_EXTENSION ||
             structure.structureType == STRUCTURE_SPAWN ||
             structure.structureType == STRUCTURE_TOWER) &&
-            structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+            (structure.store.energy == 0 || structure.store.getFreeCapacity(RESOURCE_ENERGY) >= creep.store.energy); // Keep them from travelling to a store just to drop 10-20 energy in it
         }
       });
+
+      if(!depositTarget && (!creep.room.storage || creep.room.storage.store.energy < 10000)) {
+        depositTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+          filter: (structure) => {
+            return (structure.structureType == STRUCTURE_STORAGE) &&
+              structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+          }
+        });
+      }
+
       if (depositTarget) {
         if (creep.transfer(depositTarget, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(depositTarget, { visualizePathStyle: { stroke: '#ffffff' } });

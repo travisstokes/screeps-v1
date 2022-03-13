@@ -53,6 +53,10 @@ export class DefaultTowerManager implements ITowerManager {
             })
 
             for (var tower of towers){
+                if(tower.store.energy == 0) {
+                    return;
+                }
+
                 if(tower.hits < tower.hitsMax) {
                     tower.repair(tower);
                     continue;

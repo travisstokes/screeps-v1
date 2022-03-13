@@ -53,7 +53,12 @@ export class RoleManager {
         continue;
       }
 
-      role.run(creep);
+      try{
+        role.run(creep);
+      }
+      catch (error) {
+        console.log((error as Error).message);
+      }
     }
   }
 }

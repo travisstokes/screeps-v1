@@ -4,13 +4,14 @@ export interface IGarbageCollector {
 
 export class GarbageCollector {
   cleanCreeps(): void {
-    //if (Game.time % 100 != 0) { return; }
     for (const name in Memory.creeps) {
       if (!(name in Game.creeps)) {
         console.log(`Removing ${name}`);
 
-        if(Memory.creeps[name].role) {
+
+        if(Memory.creeps[name].role && !Memory.creeps[name].preventRespawn) {
           console.log(`Queueing for respawn`);
+          //Game.services.spawnManager.addByRoleName(Memory.creeps[name].role, 0, Memory.creeps[name]);
           Game.services.spawnManager.addByRoleName(Memory.creeps[name].role);
         }
 
