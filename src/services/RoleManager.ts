@@ -1,3 +1,4 @@
+import { StaticMiner as StaticMinerRole } from "roles/StaticMinerRole";
 import { IRole } from "../interfaces/IRole";
 import { BuilderRole } from "../roles/BuilderRole";
 import { HarvesterRole } from "../roles/HarvesterRole";
@@ -16,9 +17,11 @@ export class RoleManager {
     var harvesterRole = new HarvesterRole();
     var builderRole = new BuilderRole();
     var upgraderRole = new UpgraderRole();
+    var staticMinerRole = new StaticMinerRole();
     this.availableRoles.set(harvesterRole.roleName, harvesterRole);
     this.availableRoles.set(builderRole.roleName, builderRole);
     this.availableRoles.set(upgraderRole.roleName, upgraderRole);
+    this.availableRoles.set(staticMinerRole.roleName, staticMinerRole);
   }
 
   byName(name: string): IRole {
