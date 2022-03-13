@@ -15,5 +15,6 @@ declare global {
       uuid: number;
       log: any;
       spawnQueue: string;
+      sourceMetadataCache: string;
   }
 }

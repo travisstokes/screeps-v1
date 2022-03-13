@@ -1,4 +1,5 @@
 import { IGameServices } from "interfaces/global-interfaces/game";
+import { SourceManager } from "services/SourceManager";
 import { DefaultTowerManager } from "services/TowerManager";
 import { ErrorMapper } from "utils/ErrorMapper";
 import { GarbageCollector } from "./services/GarbageCollector";
@@ -19,7 +20,8 @@ function initServices() {
       spawnManager: spawnManager,
       roleManager: new RoleManager(),
       garbageCollector: new GarbageCollector(),
-      towerManager: new DefaultTowerManager()
+      towerManager: new DefaultTowerManager(),
+      sourceManager: new SourceManager()
     }
 
     spawnManager.loadQueue();
