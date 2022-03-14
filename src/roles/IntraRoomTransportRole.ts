@@ -2,12 +2,14 @@ import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
 import { ISpawnData } from "interfaces/ISpawnData";
 import { BaseRole } from "./BaseRole";
 
-export class StaticMinerRole extends BaseRole{
-    roleName: string = "static-miner";
+export class IntraRoomTransportRole extends BaseRole{
+    roleName: string = "intra-room-transport";
 
     bodyMatrix: IBodyMatrixEntry[] = [
+        {energyRequired: 300, body: [WORK, WORK, CARRY, MOVE]},
+        {energyRequired: 400, body: [WORK, WORK, WORK, CARRY, MOVE]},
         {energyRequired: 700, body: [WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE]}
-      ]
+      ];
     run(creep: Creep): void {
         if(creep.spawning) {return;}
 

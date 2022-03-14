@@ -1,4 +1,4 @@
-import { StaticMiner as StaticMinerRole } from "roles/StaticMinerRole";
+import { StaticMinerRole as StaticMinerRole } from "roles/StaticMinerRole";
 import { IRole } from "../interfaces/IRole";
 import { BuilderRole } from "../roles/BuilderRole";
 import { HarvesterRole } from "../roles/HarvesterRole";

@@ -1,11 +1,15 @@
+import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
 import { ISpawnData } from "interfaces/ISpawnData";
 import { BaseRole } from "./BaseRole";
 
 export class BuilderRole extends BaseRole {
   roleName: string = "builder";
-  getSpawnData(maxEnergy: number): ISpawnData {
-      return {body: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]};
-  }
+
+  bodyMatrix: IBodyMatrixEntry[] = [
+    {energyRequired: 300, body: [WORK, WORK, CARRY, MOVE]},
+    {energyRequired: 400, body: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]}
+  ]
+
   run(creep: Creep): void {
     if(creep.spawning) {return;}
 

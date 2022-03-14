@@ -7,7 +7,7 @@ declare module "creep-memory-extensions" {
         expirationTick?: number;
         room?: string;
         working?: boolean;
-        movingTo?: RoomPosition;
+        movingToId?: Id<Source> | Id<Creep> | Id<Structure>;
         assignedSource?: Id<Source>;
         preventRespawn?: boolean;
       }
