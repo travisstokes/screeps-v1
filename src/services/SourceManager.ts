@@ -20,7 +20,7 @@ export class SourceManager implements ISourceManager {
         }
 
         // TODO: Handle possibility of assigning to a different room than creep's current?
-        // TODO: Handle advanced support for creep death to support metadata caching.
+        // TODO: Handle event support for creep death to support metadata cache invalidation.
         var sourceMetaData = this.getRoomSourcesMetadata(creep.room.name);
         var creepWorkParts = creep.getActiveBodyparts(WORK);
 
@@ -37,23 +37,27 @@ export class SourceManager implements ISourceManager {
 
         console.log(`Attempting advanced assignment for creep: ${creep.name}`);
         // Find all sources where the average work parts per assigned worker is less than the current.
-        var replacementCandidates = _.filter(sourceMetaData, source => source.assignedWorkParts / source.assignedCreeps.length < creepWorkParts);
+        var sourceAssignmentCandidates = _.filter(sourceMetaData, source => source.assignedWorkParts / source.assignedCreeps.length < creepWorkParts);
 
-        if(replacementCandidates.length == 0) {
-            console.log("No replacement found");
+        if(sourceAssignmentCandidates.length == 0) {
+            console.log("No available source found");
             creep.memory.assignedSource = undefined;
             return undefined;
         }
 
-        // Find the one with the most creeps (which should result in the highest retire count).
-        var replacementCandidate = _.max(replacementCandidates, candidate => candidate.assignedCreeps.length);
-        var assignedCreeps = replacementCandidate.assignedCreeps.map(creepId => {
+        // Find the candidate with the most currently assigned creeps (which should result in the highest retire count).
+        var targetSourceData = _.max(sourceAssignmentCandidates, candidate => candidate.assignedCreeps.length);
+        var assignedCreeps = targetSourceData.assignedCreeps.map(creepId => {
             var creep = Game.getObjectById(creepId);
             return {value: creep, workers: creep?.getActiveBodyparts(WORK)};
         });
 
+        // Sort the currently assigned creeps by number of workers
         assignedCreeps = _.sortBy(assignedCreeps, creep => creep.workers);
 
+        // Inserting our new creep JUST BEFORE creeps of it's size or larger makes it so we don't accidentally swap back and forth on each individual creep's assignment request.
+        // creeps of the same size back and forth. For example, if there were 2,2,4 and we are adding a 4 the existing four and this new one
+        // will swap back each and we will "successfully" assign both 4s every time when they ask, effectively having both fours and a 2 thinking they are assigned.
         var insertIndex = _.findIndex(assignedCreeps, c => c.workers ?? 0 >= creepWorkParts);
         var newAssignment = {value: creep, workers: creepWorkParts};
         if(insertIndex == -1) {
@@ -62,32 +66,43 @@ export class SourceManager implements ISourceManager {
             assignedCreeps.splice(insertIndex, 0, newAssignment);
         }
 
-        replacementCandidate.assignedCreeps = [];
-        replacementCandidate.assignedWorkParts = 0;
+        // Clear out the assigned creeps and the total work parts for the
+        targetSourceData.assignedCreeps = [];
+        targetSourceData.assignedWorkParts = 0;
 
-        _.reduceRight(assignedCreeps, (candidate, assignedCreep) => {
-            if(!assignedCreep.value || !assignedCreep.workers) {
-                return candidate;
+        // This reduction starts with the largest creeps (right side of the array sorted ascending)
+        // For each creep, it clears the assignment. Checks to see if it will fit and assigns it (updating it's memory and the source metadata) if so.
+        // This should result in the largest possible creeps being included, but could potentially result in a suboptimal configuration
+        // If we have a 5,4,2 for example, it will only include the 5 even through taking the 4/2 instead would result in a more optimal solution.
+        // I'm leaning on awareness that my miners are all configured to use 1,2,4 or 6 WORK parts, though, so these edge cases should not occur.
+        _.reduceRight(assignedCreeps, (targetSourceData, potentialCreep) => {
+            // Probably a better way to manage the type safety here to prevent the need for this check; but it's trivial enough I don't feel like tracking down
+            // the proper way to keep undefined from being a possibility.
+            if(!potentialCreep.value || !potentialCreep.workers) {
+                return targetSourceData;
             }
 
-            assignedCreep.value.memory.assignedSource = undefined;
+            // Clear out any existing assignment in case this creep gets dropped.
+            potentialCreep.value.memory.assignedSource = undefined;
 
-            if(candidate.assignedWorkParts + assignedCreep.workers > STANDARD_MAX_WORK_PARTS) {
-                return candidate;
+            // If this creep would put it over the max work parts, just advance the data as is.
+            if(targetSourceData.assignedWorkParts + potentialCreep.workers > STANDARD_MAX_WORK_PARTS) {
+                return targetSourceData;
             }
 
-            assignedCreep.value.memory.assignedSource = replacementCandidate.source.id;
-            candidate.assignedCreeps.push(assignedCreep.value.id);
-            candidate.assignedWorkParts += assignedCreep.workers;
+            // Update the data to include the creep, and the creep's memory to reflect the assignment.
+            potentialCreep.value.memory.assignedSource = targetSourceData.source.id;
+            targetSourceData.assignedCreeps.push(potentialCreep.value.id);
+            targetSourceData.assignedWorkParts += potentialCreep.workers;
 
-            return candidate;
-        }, replacementCandidate)
+            return targetSourceData;
+        }, targetSourceData)
 
         // Handle more complex scenarios like swapping in larger miners for efficiency.
         this.saveCache();
 
-        if(replacementCandidate.assignedCreeps.includes(creep.id)) {
-            return replacementCandidate.source;
+        if(targetSourceData.assignedCreeps.includes(creep.id)) {
+            return targetSourceData.source;
         }
         return undefined;
     }
@@ -109,6 +124,8 @@ export class SourceManager implements ISourceManager {
     }
 
     getRoomSourcesMetadata(roomName: string): ISourceMetadata[] {
+        // Caching is currently disabled until I get the creep death event system in place so we can efficiently trigger cache invalidation.
+
         // if(!this.persistentCacheLoaded) {
         //     this.loadCache();
         // }
@@ -149,10 +166,14 @@ export class SourceManager implements ISourceManager {
     }
 
     saveCache(): void {
+        // Caching is currently disabled until I get the creep death event system in place so we can efficiently trigger cache invalidation.
+
         // Memory.sourceMetadataCache = JSON.stringify(this.metadataCache);
     }
 
     loadCache(): void {
+        // Caching is currently disabled until I get the creep death event system in place so we can efficiently trigger cache invalidation.
+
         // this.metadataCache = {};
         // if(trim(Memory.sourceMetadataCache)){
         //     this.metadataCache = JSON.parse(Memory.sourceMetadataCache);
