@@ -56,8 +56,8 @@ export class SourceManager implements ISourceManager {
         assignedCreeps = _.sortBy(assignedCreeps, creep => creep.workers);
 
         // Inserting our new creep JUST BEFORE creeps of it's size or larger makes it so we don't accidentally swap back and forth on each individual creep's assignment request.
-        // creeps of the same size back and forth. For example, if there were 2,2,4 and we are adding a 4 the existing four and this new one
-        // will swap back each and we will "successfully" assign both 4s every time when they ask, effectively having both fours and a 2 thinking they are assigned.
+        // For example, if there were 2,2,4 and we are adding a 4 we will "successfully" assign both 4s every time each asks,
+        // effectively having both fours and a 2 thinking they are assigned due to loop execution sequencing.
         var insertIndex = _.findIndex(assignedCreeps, c => c.workers ?? 0 >= creepWorkParts);
         var newAssignment = {value: creep, workers: creepWorkParts};
         if(insertIndex == -1) {
