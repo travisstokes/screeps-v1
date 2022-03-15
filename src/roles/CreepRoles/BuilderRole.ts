@@ -10,6 +10,10 @@ export class BuilderRole extends BaseRole {
     {energyRequired: 400, body: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]}
   ]
 
+  getBuildTarget(creep : Creep): ConstructionSite<BuildableStructureConstant> | undefined {
+    return creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES) as ConstructionSite<BuildableStructureConstant>;
+  }
+
   run(creep: Creep): void {
     if(creep.spawning) {return;}
 
@@ -23,7 +27,7 @@ export class BuilderRole extends BaseRole {
     }
 
     if (creep.memory.building) {
-      var buildTarget = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+      var buildTarget = this.getBuildTarget(creep);
       if (buildTarget) {
         if (creep.build(buildTarget) == ERR_NOT_IN_RANGE) {
           creep.moveTo(buildTarget, { visualizePathStyle: { stroke: '#ffffff' } });

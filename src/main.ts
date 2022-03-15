@@ -1,10 +1,10 @@
 import { IGameServices } from "interfaces/global-interfaces/game";
-import { SourceManager } from "services/SourceManager";
-import { DefaultTowerManager } from "services/TowerManager";
+import { SourceManager } from "managers/SourceManager";
+import { DefaultTowerManager } from "managers/TowerManager";
 import { ErrorMapper } from "utils/ErrorMapper";
-import { GarbageCollector } from "./services/GarbageCollector";
-import { RoleManager } from "./services/RoleManager";
-import { StaticSpawner } from "./services/SpawnManager";
+import { GarbageCollector } from "./services/Utility/GarbageCollector";
+import { CreepRoleManager } from "./managers/CreepRoleManager";
+import { StaticSpawner } from "./managers/SpawnManager";
 
 console.log(`Startup game tick is ${Game.time}`);
 
@@ -23,7 +23,7 @@ function initServices() {
   var spawnManager = new StaticSpawner();
   Game.services = initServices.services = {
     spawnManager: spawnManager,
-    roleManager: new RoleManager(),
+    creepRoleManager: new CreepRoleManager(),
     garbageCollector: new GarbageCollector(),
     towerManager: new DefaultTowerManager(),
     sourceManager: new SourceManager()
@@ -37,7 +37,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   console.log(`Current game tick is ${Game.time}`);
   initServices();
 
-  Game.services.roleManager.runAll();
+  Game.services.creepRoleManager.runAll();
 
   Game.services.towerManager.run();
 

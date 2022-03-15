@@ -1,5 +1,4 @@
 import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
-import { ISpawnData } from "interfaces/ISpawnData";
 import { BaseRole } from "./BaseRole";
 
 export class UpgraderRole extends BaseRole {
@@ -8,7 +7,8 @@ export class UpgraderRole extends BaseRole {
   bodyMatrix: IBodyMatrixEntry[] = [
     {energyRequired: 300, body: [WORK, WORK, CARRY, MOVE]},
     {energyRequired: 400, body: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]},
-    {energyRequired: 500, body: [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE]}
+    {energyRequired: 500, body: [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE]},
+    {energyRequired: 700, body: [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]},
   ]
 
   run(creep: Creep): void {

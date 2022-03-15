@@ -1,12 +1,13 @@
-import { ISpawner } from 'services/SpawnManager';
-import { IRoleManager } from "services/RoleManager";
-import { IGarbageCollector } from 'services/GarbageCollector';
-import { ITowerManager } from 'services/TowerManager';
+import { ISpawner } from 'managers/SpawnManager';
+import { IRoleManager } from "interfaces/IRoleManager";
+import { IGarbageCollector } from 'services/Utility/GarbageCollector';
+import { ITowerManager } from 'managers/TowerManager';
 import { ISourceManager } from 'interfaces/ISourceManager';
+import { ICreepRole } from 'interfaces/ICreepRole';
 
 declare interface IGameServices {
   spawnManager: ISpawner,
-  roleManager: IRoleManager,
+  creepRoleManager: IRoleManager<ICreepRole>,
   towerManager: ITowerManager,
   garbageCollector: IGarbageCollector,
   sourceManager: ISourceManager

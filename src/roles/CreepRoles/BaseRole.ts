@@ -1,8 +1,8 @@
-import { IRole } from "../interfaces/IRole";
-import { ISpawnData } from "../interfaces/ISpawnData";
-import { IBodyMatrixEntry } from "../interfaces/IBodyMatrixEntry";
+import { ICreepRole } from "../../interfaces/ICreepRole";
+import { ISpawnData } from "../../interfaces/ISpawnData";
+import { IBodyMatrixEntry } from "../../interfaces/IBodyMatrixEntry";
 
-export abstract class BaseRole implements IRole {
+export abstract class BaseRole implements ICreepRole {
   abstract run(creep: Creep): void;
   abstract roleName: string;
   abstract bodyMatrix: IBodyMatrixEntry[];

@@ -1,5 +1,5 @@
+import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
 import { BaseRole } from "./BaseRole";
-import { IBodyMatrixEntry } from "../interfaces/IBodyMatrixEntry";
 
 export class HarvesterRole extends BaseRole {
   roleName: string = "harvester";

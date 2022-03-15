@@ -11,5 +11,5 @@ declare module "creep-memory-extensions" {
         assignedSource?: Id<Source>;
         preventRespawn?: boolean;
       }
-    }
+  }
 }

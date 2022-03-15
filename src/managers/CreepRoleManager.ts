@@ -1,30 +1,25 @@
-import { StaticMinerRole as StaticMinerRole } from "roles/StaticMinerRole";
-import { IRole } from "../interfaces/IRole";
-import { BuilderRole } from "../roles/BuilderRole";
-import { HarvesterRole } from "../roles/HarvesterRole";
-import { UpgraderRole } from "../roles/UpgraderRole";
+import { BuilderRole } from "roles/CreepRoles/BuilderRole";
+import { HarvesterRole } from "roles/CreepRoles/HarvesterRole";
+import { StaticMinerRole as StaticHarvesterRole } from "roles/CreepRoles/StaticMinerRole";
+import { UpgraderRole } from "roles/CreepRoles/UpgraderRole";
+import { ICreepRole } from "../interfaces/ICreepRole";
+import { IRoleManager } from "../interfaces/IRoleManager";
 
-export interface IRoleManager {
-  byName(name: string): IRole;
-  runByRole(name: string): void;
-  runAll(): void;
-}
-
-export class RoleManager {
-  availableRoles: Map<string, IRole> = new Map<string, IRole>();
+export class CreepRoleManager implements IRoleManager<ICreepRole> {
+  availableRoles: Map<string, ICreepRole> = new Map<string, ICreepRole>();
 
   constructor() {
     var harvesterRole = new HarvesterRole();
     var builderRole = new BuilderRole();
     var upgraderRole = new UpgraderRole();
-    var staticMinerRole = new StaticMinerRole();
+    var staticMinerRole = new StaticHarvesterRole();
     this.availableRoles.set(harvesterRole.roleName, harvesterRole);
     this.availableRoles.set(builderRole.roleName, builderRole);
     this.availableRoles.set(upgraderRole.roleName, upgraderRole);
     this.availableRoles.set(staticMinerRole.roleName, staticMinerRole);
   }
 
-  byName(name: string): IRole {
+  getByName(name: string): ICreepRole {
     var role = this.availableRoles.get(name);
 
     if (role == undefined) {
@@ -32,15 +27,6 @@ export class RoleManager {
     }
 
     return role;
-  }
-
-  runByRole(name: string): void {
-    for (var creepName in Game.creeps) {
-      var creep = Game.creeps[creepName];
-      if (creep.memory.role == name) {
-        this.availableRoles.get(creep.memory.role)?.run(creep);
-      }
-    }
   }
 
   runAll(): void {
