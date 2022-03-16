@@ -8,9 +8,8 @@ import { StaticSpawner } from "./managers/SpawnManager";
 import { RouteService } from "services/Utility/RouteService";
 import { DefaultRoomManager } from "managers/DefaultRoomManager";
 
-import "prototypes/room";
-import "prototypes/CreepRoleConstants";
-import "prototypes/RoomRoleConstants";
+import "constants";
+import "prototypes";
 
 console.log(`Startup game tick is ${Game.time}`);
 
