@@ -12,8 +12,6 @@ import { StaticSpawner } from "./managers/SpawnManager";
 import { RouteService } from "services/Utility/RouteService";
 import { DefaultRoomManager } from "managers/DefaultRoomManager";
 
-
-
 console.log(`Startup game tick is ${Game.time}`);
 
 function initServices() {
