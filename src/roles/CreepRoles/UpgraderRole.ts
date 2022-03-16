@@ -2,7 +2,7 @@ import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
 import { BaseRole } from "./BaseRole";
 
 export class UpgraderRole extends BaseRole {
-  roleName: string = "upgrader";
+  roleName: string = UPGRADER_ROLE;
 
   bodyMatrix: IBodyMatrixEntry[] = [
     {energyRequired: 300, body: [WORK, CARRY, MOVE, MOVE]},

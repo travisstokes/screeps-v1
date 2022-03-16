@@ -2,7 +2,7 @@ import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
 import { BaseRole } from "./BaseRole";
 
 export class BuilderRole extends BaseRole {
-  roleName: string = "builder";
+  roleName: string = BUILDER_ROLE;
 
   bodyMatrix: IBodyMatrixEntry[] = [
     {energyRequired: 200, body: [WORK, CARRY, MOVE]},

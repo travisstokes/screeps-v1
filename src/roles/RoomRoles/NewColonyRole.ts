@@ -7,9 +7,9 @@ import { ReachRCLLevel } from "./Goals/ReachRCLLevel";
 
 export class NewColonyRole extends BaseRoomRole {
     protected roomGoals: IRoomGoal[];
-    protected evolveRole?: ROOM_ROLES_CONSTANT = "optimize-controller";
+    protected evolveRole?: ROOM_ROLES_CONSTANT = OPTIMIZE_CONTROLLER_ROLE;
     protected devolveRole?: ROOM_ROLES_CONSTANT;
-    protected roleName: string = "new-colony";
+    protected roleName: string = NEW_COLONY_ROLE;
 
     constructor() {
         super();

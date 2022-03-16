@@ -3,7 +3,7 @@ import { ISpawnData } from "interfaces/ISpawnData";
 import { BaseRole } from "./BaseRole";
 
 export class StaticMinerRole extends BaseRole{
-    roleName: string = "static-miner";
+    roleName: string = STATIC_MINER_ROLE;
 
     bodyMatrix: IBodyMatrixEntry[] = [
         {energyRequired: 700, body: [WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE]}

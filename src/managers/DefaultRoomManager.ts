@@ -10,7 +10,7 @@ export class DefaultRoomManager implements IRoleManager<IRoomRole> {
     constructor() {
         var optimizeControllerRole = new OptimizeControllerRole();
         var newColonyRole = new NewColonyRole();
-        this.availableRoles.set("optimize-controller", optimizeControllerRole);
+        this.availableRoles.set(OPTIMIZE_CONTROLLER_ROLE, optimizeControllerRole);
         this.availableRoles.set(NEW_COLONY_ROLE, newColonyRole);
     }
 
