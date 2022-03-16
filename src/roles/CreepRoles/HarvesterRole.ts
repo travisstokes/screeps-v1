@@ -5,7 +5,7 @@ export class HarvesterRole extends BaseRole {
   roleName: string = "harvester";
 
   bodyMatrix: IBodyMatrixEntry[] = [
-    {energyRequired: 300, body: [WORK, WORK, CARRY, MOVE]},
+    {energyRequired: 300, body: [WORK, CARRY, MOVE, MOVE]},
     {energyRequired: 400, body: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]}
   ]
 

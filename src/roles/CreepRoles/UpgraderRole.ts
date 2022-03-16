@@ -5,9 +5,9 @@ export class UpgraderRole extends BaseRole {
   roleName: string = "upgrader";
 
   bodyMatrix: IBodyMatrixEntry[] = [
-    {energyRequired: 300, body: [WORK, WORK, CARRY, MOVE]},
+    {energyRequired: 300, body: [WORK, CARRY, MOVE, MOVE]},
     {energyRequired: 400, body: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]},
-    {energyRequired: 500, body: [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE]},
+    {energyRequired: 550, body: [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE]},
     {energyRequired: 700, body: [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]},
   ]
 
@@ -29,15 +29,28 @@ export class UpgraderRole extends BaseRole {
       }
     }
     else {
-      var energyStores = creep.room
-        .find(FIND_STRUCTURES, {
-          filter: struct => (struct.structureType == STRUCTURE_CONTAINER
-          || struct.structureType == STRUCTURE_STORAGE) && struct.store.energy > 0
-        }).map(struct => struct as StructureStorage | StructureContainer)
+      var energyStores = creep.room.find(FIND_STRUCTURES, {
+        filter: struct => (struct.structureType == STRUCTURE_CONTAINER || struct.structureType == STRUCTURE_STORAGE)
+      }).map(struct => struct as StructureStorage | StructureContainer);
 
-      var target = _.min(energyStores, struct => struct.store.energy);
-      if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(target, { visualizePathStyle: { stroke: '#ffaa00' } });
+      if(energyStores.length) {
+        var storesWithEnergy = energyStores.filter(s => s.store.energy > 0);
+        var collectionSource = _.min(storesWithEnergy, struct => creep.pos.getRangeTo(struct));
+        if(collectionSource) {
+          if (creep.withdraw(collectionSource, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(collectionSource, { visualizePathStyle: { stroke: '#ffaa00' } });
+          }
+
+          return;
+        }
+      } else {
+        var closestHarvestSource = creep.pos.findClosestByPath(FIND_SOURCES, {maxRooms: 1, filter: s => s.energy > 0});
+
+        if(closestHarvestSource) {
+          if(creep.harvest(closestHarvestSource) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(closestHarvestSource);
+          }
+        }
       }
     }
   }

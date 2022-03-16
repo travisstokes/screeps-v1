@@ -1,3 +1,4 @@
+import { IRoomGoal } from "./Goals/IRoomGoal";
 import { IRoomRole } from "./IRoomRole";
 
 // CONTROLLERS
@@ -6,6 +7,7 @@ export abstract class BaseRoomRole implements IRoomRole {
     protected abstract roleName: string;
     protected abstract evolveRole?: ROOM_ROLES_CONSTANT;
     protected abstract devolveRole?: ROOM_ROLES_CONSTANT;
+    protected abstract roomGoals: IRoomGoal[];
 
     getRoleName(): string {
         return this.roleName;
@@ -19,6 +21,15 @@ export abstract class BaseRoomRole implements IRoomRole {
     }
 
     run(room: Room): void {
-        throw new Error("Method not implemented.");
+        // TODO: Add dependency tree and async progress support.
+        for(var goal of this.roomGoals) {
+            if(goal.checkAchieved(room)) {
+                continue;
+            }
+
+            // TODO: Handle failed progress?
+            goal.attemptProgress(room);
+            return;
+        }
     }
 }

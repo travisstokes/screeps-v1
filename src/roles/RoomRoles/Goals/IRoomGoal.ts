@@ -1,6 +1,7 @@
-import { IRoomRole } from "../IRoomRole";
-
+// TODO: Probably want to change the attempt progress result to screep error codes or custom ones to let the room controller figure out what to do.
 export interface IRoomGoal {
-    checkAchieved(room: string): void;
-    attemptProgress(room: string): void;
+    checkAchieved(room: Room): boolean;
+    attemptProgress(room: Room): boolean;
 }
+
+

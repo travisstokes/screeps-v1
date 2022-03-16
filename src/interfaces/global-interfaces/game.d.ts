@@ -4,13 +4,17 @@ import { IGarbageCollector } from 'services/Utility/GarbageCollector';
 import { ITowerManager } from 'managers/TowerManager';
 import { ISourceManager } from 'interfaces/ISourceManager';
 import { ICreepRole } from 'interfaces/ICreepRole';
+import { IRouteService } from 'interfaces/IRouteService';
+import { IRoomRole } from 'roles/RoomRoles/IRoomRole';
 
 declare interface IGameServices {
   spawnManager: ISpawner,
   creepRoleManager: IRoleManager<ICreepRole>,
   towerManager: ITowerManager,
   garbageCollector: IGarbageCollector,
-  sourceManager: ISourceManager
+  sourceManager: ISourceManager,
+  routeService: IRouteService,
+  roomManager: IRoleManager<IRoomRole>
 }
 
 declare global {

@@ -1,12 +1,11 @@
 import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
-import { ISpawnData } from "interfaces/ISpawnData";
 import { BaseRole } from "./BaseRole";
 
 export class BuilderRole extends BaseRole {
   roleName: string = "builder";
 
   bodyMatrix: IBodyMatrixEntry[] = [
-    {energyRequired: 300, body: [WORK, WORK, CARRY, MOVE]},
+    {energyRequired: 200, body: [WORK, CARRY, MOVE]},
     {energyRequired: 400, body: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]}
   ]
 
@@ -45,7 +44,7 @@ export class BuilderRole extends BaseRole {
           || struct.structureType == STRUCTURE_STORAGE) && struct.store.energy > 0
         }).map(struct => struct as StructureStorage | StructureContainer)
 
-        var collectionSource = _.min(energyStores, struct => struct.store.energy);
+        var collectionSource = _.min(energyStores, struct => creep.pos.getRangeTo(struct));
         if (creep.withdraw(collectionSource, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(collectionSource, { visualizePathStyle: { stroke: '#ffaa00' } });
         }
