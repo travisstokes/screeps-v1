@@ -1,3 +1,4 @@
+import { NEW_COLONY_ROLE, OPTIMIZE_CONTROLLER_ROLE, ROOM_ROLES_CONSTANT } from "constants/RoomRoleConstants";
 import { BaseRoomRole } from "./BaseRoomRole";
 import { IRoomGoal } from "./Goals/IRoomGoal";
 

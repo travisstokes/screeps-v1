@@ -1,8 +1,9 @@
+import { CREEP_ROLE_CONSTANTS, HARVESTER_ROLE } from "constants/CreepRoleConstants";
 import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
 import { BaseRole } from "./BaseRole";
 
 export class HarvesterRole extends BaseRole {
-  roleName: string = HARVESTER_ROLE;
+  roleName: CREEP_ROLE_CONSTANTS = HARVESTER_ROLE;
 
   bodyMatrix: IBodyMatrixEntry[] = [
     {energyRequired: 300, body: [WORK, CARRY, MOVE, MOVE]},

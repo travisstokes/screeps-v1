@@ -1,3 +1,4 @@
+import { HARVESTER_ROLE, STATIC_MINER_ROLE } from "constants/CreepRoleConstants";
 import { IRoomGoal } from "./IRoomGoal";
 
 export class CreateFirstMiner implements IRoomGoal {

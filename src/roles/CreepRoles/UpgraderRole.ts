@@ -1,8 +1,9 @@
+import { CREEP_ROLE_CONSTANTS, UPGRADER_ROLE } from "constants/CreepRoleConstants";
 import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
 import { BaseRole } from "./BaseRole";
 
 export class UpgraderRole extends BaseRole {
-  roleName: string = UPGRADER_ROLE;
+  roleName: CREEP_ROLE_CONSTANTS = UPGRADER_ROLE;
 
   bodyMatrix: IBodyMatrixEntry[] = [
     {energyRequired: 300, body: [WORK, CARRY, MOVE, MOVE]},

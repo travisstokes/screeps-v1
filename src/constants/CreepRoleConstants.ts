@@ -1,21 +1,13 @@
-import _ from "lodash";
+export type CREEP_ROLE_CONSTANTS =
+    typeof BUILDER_ROLE
+    | typeof HARVESTER_ROLE
+    | typeof INTRA_ROOM_TRANSPORT_ROLE
+    | typeof STATIC_MINER_ROLE
+    | typeof UPGRADER_ROLE;
 
-declare global {
-    type CREEP_ROLE_CONSTANTS = BUILDER_ROLE | HARVESTER_ROLE | INTRA_ROOM_TRANSPORT_ROLE | STATIC_MINER_ROLE | UPGRADER_ROLE;
-
-    type HARVESTER_ROLE = "harvester";
-    type STATIC_MINER_ROLE = "static-miner";
-    const HARVESTER_ROLE: HARVESTER_ROLE;
-    const STATIC_MINER_ROLE: STATIC_MINER_ROLE;
-
-    type BUILDER_ROLE = "builder";
-    type UPGRADER_ROLE = "upgrader";
-    type INTRA_ROOM_TRANSPORT_ROLE = "intra-room-transport";
-
-    const BUILDER_ROLE: BUILDER_ROLE;
-    const UPGRADER_ROLE: UPGRADER_ROLE;
-    const INTRA_ROOM_TRANSPORT_ROLE: INTRA_ROOM_TRANSPORT_ROLE;
-}
-
-
+export const HARVESTER_ROLE = "harvester";
+export const STATIC_MINER_ROLE = "static-miner";
+export const BUILDER_ROLE = "builder";
+export const UPGRADER_ROLE = "upgrader";
+export const INTRA_ROOM_TRANSPORT_ROLE = "intra-room-transport";
 

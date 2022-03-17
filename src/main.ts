@@ -1,5 +1,4 @@
 import "constants/CreepRoleConstants";
-import "constants/RoomRoleConstants";
 import "prototypes";
 
 import { IGameServices } from "interfaces/global-interfaces/game";

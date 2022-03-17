@@ -1,9 +1,9 @@
+import { CREEP_ROLE_CONSTANTS, STATIC_MINER_ROLE } from "constants/CreepRoleConstants";
 import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
-import { ISpawnData } from "interfaces/ISpawnData";
 import { BaseRole } from "./BaseRole";
 
 export class StaticMinerRole extends BaseRole{
-    roleName: string = STATIC_MINER_ROLE;
+    roleName: CREEP_ROLE_CONSTANTS = STATIC_MINER_ROLE;
 
     bodyMatrix: IBodyMatrixEntry[] = [
         {energyRequired: 700, body: [WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE]}

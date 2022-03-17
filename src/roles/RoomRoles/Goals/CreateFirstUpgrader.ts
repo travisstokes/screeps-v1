@@ -1,3 +1,4 @@
+import { UPGRADER_ROLE } from "constants/CreepRoleConstants";
 import { IRoomGoal } from "./IRoomGoal";
 
 export class CreateFirstUpgrader implements IRoomGoal {

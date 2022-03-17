@@ -2,6 +2,7 @@ import { IRoleManager } from "interfaces/IRoleManager";
 import { NewColonyRole} from "../roles/RoomRoles/NewColonyRole";
 import { OptimizeControllerRole } from "../roles/RoomRoles/OptimizeControlerRole";
 import { IRoomRole } from "../roles/RoomRoles/IRoomRole";
+import { NEW_COLONY_ROLE, OPTIMIZE_CONTROLLER_ROLE, ROOM_ROLES_CONSTANT } from "constants/RoomRoleConstants";
 
 
 export class DefaultRoomManager implements IRoleManager<IRoomRole> {
