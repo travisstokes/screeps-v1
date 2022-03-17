@@ -2,6 +2,7 @@ import { IRoleManager } from "interfaces/IRoleManager";
 import { NewColonyRole} from "../roles/RoomRoles/NewColonyRole";
 import { OptimizeControllerRole } from "../roles/RoomRoles/OptimizeControlerRole";
 import { IRoomRole } from "../roles/RoomRoles/IRoomRole";
+import { NEW_COLONY_ROLE, OPTIMIZE_CONTROLLER_ROLE, ROOM_ROLES_CONSTANT } from "constants/RoomRoleConstants";
 
 
 export class DefaultRoomManager implements IRoleManager<IRoomRole> {
@@ -10,8 +11,8 @@ export class DefaultRoomManager implements IRoleManager<IRoomRole> {
     constructor() {
         var optimizeControllerRole = new OptimizeControllerRole();
         var newColonyRole = new NewColonyRole();
-        this.availableRoles.set("optimize-controller", optimizeControllerRole);
-        this.availableRoles.set("new-colony", newColonyRole);
+        this.availableRoles.set(OPTIMIZE_CONTROLLER_ROLE, optimizeControllerRole);
+        this.availableRoles.set(NEW_COLONY_ROLE, newColonyRole);
     }
 
     getByName(name: ROOM_ROLES_CONSTANT): IRoomRole {

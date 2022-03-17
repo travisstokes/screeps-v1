@@ -1,3 +1,6 @@
+import "constants/CreepRoleConstants";
+import "prototypes";
+
 import { IGameServices } from "interfaces/global-interfaces/game";
 import { SourceManager } from "managers/SourceManager";
 import { DefaultTowerManager } from "managers/TowerManager";
@@ -7,10 +10,6 @@ import { CreepRoleManager } from "./managers/CreepRoleManager";
 import { StaticSpawner } from "./managers/SpawnManager";
 import { RouteService } from "services/Utility/RouteService";
 import { DefaultRoomManager } from "managers/DefaultRoomManager";
-
-import "prototypes/room";
-import "prototypes/CreepRoleConstants";
-import "prototypes/RoomRoleConstants";
 
 console.log(`Startup game tick is ${Game.time}`);
 
