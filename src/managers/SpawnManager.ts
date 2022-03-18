@@ -95,11 +95,12 @@ export class StaticSpawner implements ISpawner {
         }
 
         var role = Game.services.creepRoleManager.getByName(entry.roleToSpawn);
-        var spawnData = role.getSpawnData(entry.energyToUse);
+        var maxEnergy = entry.energyToUse ? _.min([entry.energyToUse, Game.spawns[spawner].room.energyCapacityAvailable]) : Game.spawns[spawner].room.energyCapacityAvailable;
+        var spawnData = role.getSpawnData(maxEnergy);
         console.log(`Spawning new ${entry.roleToSpawn}`);
         var creepInstanceName = `${entry.roleToSpawn}_${this.nextId++}`;
 
-        var creepMemory = entry.memory ?? { role: entry.roleToSpawn};
+        var creepMemory = entry.memory ?? <CreepMemory>{ role: entry.roleToSpawn};
 
         if (Game.spawns[spawner].spawnCreep(spawnData.body, creepInstanceName, { memory: creepMemory }) != OK) {
           console.log(`${entry.roleToSpawn} spawn failed, re-inserting into queue`);

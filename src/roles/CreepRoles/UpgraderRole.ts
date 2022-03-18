@@ -6,7 +6,7 @@ export class UpgraderRole extends BaseRole {
   roleName: CREEP_ROLE_CONSTANTS = UPGRADER_ROLE;
 
   bodyMatrix: IBodyMatrixEntry[] = [
-    {energyRequired: 300, body: [WORK, CARRY, MOVE, MOVE]},
+    {energyRequired: 300, body: [WORK, WORK, CARRY, MOVE]},
     {energyRequired: 400, body: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]},
     {energyRequired: 550, body: [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE]},
     {energyRequired: 700, body: [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]},

@@ -4,3 +4,4 @@ export type ROOM_ROLES_CONSTANT =
 
 export const OPTIMIZE_CONTROLLER_ROLE = "optimize-controller";
 export const NEW_COLONY_ROLE = "new-colony";
+

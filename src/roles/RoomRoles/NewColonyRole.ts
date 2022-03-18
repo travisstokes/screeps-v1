@@ -14,13 +14,13 @@ export class NewColonyRole extends BaseRoomRole {
 
     constructor() {
         super();
-        this.roomGoals = [];
-        this.roomGoals.push(...[
+
+        this.roomGoals = [
             new PlaceInitialSpawner(),
             new CreateFirstMiner(),
             new CreateFirstUpgrader(),
             new ReachRCLLevel(2)
-        ]);
+        ];
     }
 }
 

@@ -23,7 +23,7 @@ export class CreepRoleManager implements IRoleManager<ICreepRole> {
     var role = this.availableRoles.get(name);
 
     if (role == undefined) {
-      throw new Error("Role not found");
+      throw new Error(`Role ${name} not found`);
     }
 
     return role;
