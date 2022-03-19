@@ -2,7 +2,9 @@ import { PerformActOnTargetGoal } from "./PerformActOnTargetGoal";
 
 export class HarvestAssignedSourceGoal extends PerformActOnTargetGoal<Source> {
   checkAchieved(creep: Creep): boolean {
-    return !creep.memory.assignedSource || creep.store.getFreeCapacity() == 0;
+    return !creep.memory.assignedSource
+      || creep.store.getFreeCapacity() == 0
+      || this.getActionTarget(creep)?.energy == 0;
   }
   getActionTarget(creep: Creep): Source | null {
     if (!creep.memory.assignedSource) {

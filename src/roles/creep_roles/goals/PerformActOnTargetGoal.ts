@@ -12,6 +12,7 @@ export abstract class PerformActOnTargetGoal<T extends _HasRoomPosition & _HasId
         var target = this.getActionTarget(creep);
 
         if (!target) {
+            console.log('Could not find target')
             return false;
         }
 
@@ -19,6 +20,7 @@ export abstract class PerformActOnTargetGoal<T extends _HasRoomPosition & _HasId
 
         switch (actionResult) {
             case ERR_NOT_IN_RANGE:
+                console.log('Target not in range. Attempting to move');
                 var moveToResult = creep.moveTo(target);
                 if (moveToResult == OK) {
                     return true;
@@ -27,6 +29,7 @@ export abstract class PerformActOnTargetGoal<T extends _HasRoomPosition & _HasId
                 console.log(`Creep ${creep.id} could not move to ${target.id}. Screeps Error Code: ${moveToResult}`);
                 return false;
             case OK:
+                console.log('Success');
                 if (this.actionTriggersWorking) {
                     creep.memory.working = true;
                 }

@@ -4,7 +4,8 @@ import { PerformActOnTargetGoal } from "./PerformActOnTargetGoal";
 export class UpgradeControllerGoal extends PerformActOnTargetGoal<StructureController> {
     actionTriggersWorking: boolean = true;
     checkAchieved(creep: Creep): boolean {
-        return creep.store.energy == 0;
+        return creep.store.energy == 0
+            || !creep.room.controller;
     }
     getActionTarget(creep: Creep): StructureController | null {
         return creep.room.controller ?? null;

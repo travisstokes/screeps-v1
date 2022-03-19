@@ -5,16 +5,17 @@ export class CollectStoredEnergyFromNearestGoal extends PerformActOnTargetGoal<A
     actionDescription: string = "withdraw";
 
     checkAchieved(creep: Creep): boolean {
-        return creep.memory.working || creep.store.getFreeCapacity() == 0;
+        return creep.memory.working
+            || creep.store.getFreeCapacity() == 0
+            || this.getActionTarget(creep) == null
     }
 
     getActionTarget(creep: Creep): AnyStructure | null {
         return creep.pos.findClosestByPath(FIND_STRUCTURES, {
-            filter: (s) => {
+            filter: (s) =>
                 (s.structureType == STRUCTURE_CONTAINER
                     || s.structureType == STRUCTURE_STORAGE)
-                && s.store.energy > 0
-            },
+                && s.store.energy > 0,
             maxRooms: 1
         });
     }
