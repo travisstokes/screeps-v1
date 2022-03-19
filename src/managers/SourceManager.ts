@@ -14,6 +14,19 @@ export class SourceManager implements ISourceManager {
     metadataCache: any = {};
     persistentCacheLoaded: boolean = false;
 
+    getAvailableWorkstations(room: Room): number {
+        var sourceMetaData = this.getRoomSourcesMetadata(room.name);
+        var availableAdjacentPositions = _.sum(sourceMetaData, s => s.availableSpaces.length - s.assignedCreeps.length);
+
+        return _.sum(sourceMetaData, (sourceData) => {
+            if(sourceData.availableSpaces.length - sourceData.assignedCreeps.length == 0) {
+                return 0;
+            }
+
+            return STANDARD_MAX_WORK_PARTS - sourceData.assignedWorkParts
+        });
+    }
+
     assignSource(creep: Creep): Source | undefined {
         if(creep.memory.assignedSource) {
             return Game.getObjectById(creep.memory.assignedSource) as Source;
@@ -160,6 +173,8 @@ export class SourceManager implements ISourceManager {
                 containers: containers
             };
         });
+
+        result = _.sortBy(result, smd => smd.source.pos.findClosestByPath(FIND_MY_SPAWNS));
 
         this.metadataCache[roomName] = result;
         return result;

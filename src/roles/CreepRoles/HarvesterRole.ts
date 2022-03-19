@@ -1,8 +1,9 @@
+import { CREEP_ROLE_CONSTANTS, HARVESTER_ROLE } from "constants/CreepRoleConstants";
+import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
 import { BaseRole } from "./BaseRole";
-import { IBodyMatrixEntry } from "../interfaces/IBodyMatrixEntry";
 
 export class HarvesterRole extends BaseRole {
-  roleName: string = "harvester";
+  roleName: CREEP_ROLE_CONSTANTS = HARVESTER_ROLE;
 
   bodyMatrix: IBodyMatrixEntry[] = [
     {energyRequired: 300, body: [WORK, WORK, CARRY, MOVE]},
@@ -33,18 +34,27 @@ export class HarvesterRole extends BaseRole {
       // Have to use AnyStructure generic here to support later checks for containers, which are not owned.
       var depositTarget = creep.pos.findClosestByPath<AnyStructure>(FIND_MY_STRUCTURES, {
         filter: (structure) => {
-          return (structure.structureType == STRUCTURE_EXTENSION ||
-            structure.structureType == STRUCTURE_SPAWN ||
-            structure.structureType == STRUCTURE_TOWER) &&
-            (structure.store.energy == 0 || structure.store.getFreeCapacity(RESOURCE_ENERGY) >= creep.store.energy); // Keep them from travelling to a store just to drop 10-20 energy in it
+          return (
+            (
+              (structure.structureType == STRUCTURE_EXTENSION
+              || structure.structureType == STRUCTURE_SPAWN)
+              && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+            )
+            || (
+              // Keep them from travelling to a tower over a spawn/extension just to drop 10-20 energy in it
+              structure.structureType == STRUCTURE_TOWER
+              && structure.store.getFreeCapacity(RESOURCE_ENERGY) >= 50
+            )
+          );
         }
       });
+
       if(!depositTarget && assignedSource) {
         // Look for containers within range of source
         var targets = assignedSource.pos
           .findInRange<StructureContainer>(FIND_STRUCTURES, 1, {
             filter: (structure) => {
-              return (structure.structureType == STRUCTURE_CONTAINER && structure.store.getFreeCapacity() > 0)
+              return (structure.structureType == STRUCTURE_CONTAINER && structure.store.getFreeCapacity() > 50)
             }
           });
         if(targets.length) {
@@ -56,7 +66,7 @@ export class HarvesterRole extends BaseRole {
         depositTarget = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
           filter: (structure) => {
             return (structure.structureType == STRUCTURE_STORAGE) &&
-              structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+              structure.store.getFreeCapacity(RESOURCE_ENERGY) > 50;
           }
         });
       }
@@ -77,6 +87,8 @@ export class HarvesterRole extends BaseRole {
         if (creep.build(closestBuildTarget) == ERR_NOT_IN_RANGE) {
           creep.moveTo(closestBuildTarget, { visualizePathStyle: { stroke: '#ffffff' } });
         }
+
+        return;
       }
 
       creep.memory.upgrading = true;
