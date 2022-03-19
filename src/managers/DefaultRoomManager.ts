@@ -1,9 +1,9 @@
 import { IRoleManager } from "interfaces/IRoleManager";
-import { NewColonyRole} from "../roles/RoomRoles/NewColonyRole";
-import { OptimizeControllerRole } from "../roles/RoomRoles/OptimizeControllerRole";
-import { IRoomRole } from "../roles/RoomRoles/IRoomRole";
+import { NewColonyRole} from "../roles/room_roles/NewColonyRole";
+import { OptimizeControllerRole } from "../roles/room_roles/OptimizeControllerRole";
+import { IRoomRole } from "../roles/room_roles/IRoomRole";
 import { NEW_COLONY_ROLE, OPTIMIZE_CONTROLLER_ROLE, ROOM_ROLES_CONSTANT, TEMP_SUSTAIN_CREEPS } from "constants/RoomRoleConstants";
-import { TempSustainCreeps } from "roles/RoomRoles/TemporarySustainRole";
+import { TempSustainCreeps } from "roles/room_roles/TemporarySustainRole";
 
 
 export class DefaultRoomManager implements IRoleManager<IRoomRole> {

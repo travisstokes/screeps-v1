@@ -22,14 +22,13 @@ Room.prototype.placeExtensions = function(count: number) {
     var center = spawners[0].pos;
     var ringNumber = 1;
 
-    while(count > 1) {
+    while(count >= 1) {
         for(var x = ringNumber * -1; x <= ringNumber; x +=2 )
         {
             for(var y = ringNumber * -1; y <= ringNumber; y += 2)
             {
                 if(this.createConstructionSite(center.x + x, center.y + y, STRUCTURE_EXTENSION) == OK) {
-                    count--;
-                    if(count == 0) {
+                    if(--count == 0) {
                         return OK;
                     }
                 }
