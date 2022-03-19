@@ -2,7 +2,8 @@ import { IRoleManager } from "interfaces/IRoleManager";
 import { NewColonyRole} from "../roles/RoomRoles/NewColonyRole";
 import { OptimizeControllerRole } from "../roles/RoomRoles/OptimizeControllerRole";
 import { IRoomRole } from "../roles/RoomRoles/IRoomRole";
-import { NEW_COLONY_ROLE, OPTIMIZE_CONTROLLER_ROLE, ROOM_ROLES_CONSTANT } from "constants/RoomRoleConstants";
+import { NEW_COLONY_ROLE, OPTIMIZE_CONTROLLER_ROLE, ROOM_ROLES_CONSTANT, TEMP_SUSTAIN_CREEPS } from "constants/RoomRoleConstants";
+import { TempSustainCreeps } from "roles/RoomRoles/TemporarySustainRole";
 
 
 export class DefaultRoomManager implements IRoleManager<IRoomRole> {
@@ -11,8 +12,10 @@ export class DefaultRoomManager implements IRoleManager<IRoomRole> {
     constructor() {
         var optimizeControllerRole = new OptimizeControllerRole();
         var newColonyRole = new NewColonyRole();
+        var tempSustainCreeps = new TempSustainCreeps();
         this.availableRoles.set(OPTIMIZE_CONTROLLER_ROLE, optimizeControllerRole);
         this.availableRoles.set(NEW_COLONY_ROLE, newColonyRole);
+        this.availableRoles.set(TEMP_SUSTAIN_CREEPS, tempSustainCreeps);
     }
 
     getByName(name: ROOM_ROLES_CONSTANT): IRoomRole {
