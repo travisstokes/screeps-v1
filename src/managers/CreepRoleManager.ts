@@ -1,7 +1,7 @@
-import { BuilderRole } from "roles/CreepRoles/BuilderRole";
-import { HarvesterRole } from "roles/CreepRoles/HarvesterRole";
-import { StaticMinerRole as StaticHarvesterRole } from "roles/CreepRoles/StaticMinerRole";
-import { UpgraderRole } from "roles/CreepRoles/UpgraderRole";
+import { BuilderRole } from "roles/creep_roles/BuilderRole";
+import { HarvesterRole } from "roles/creep_roles/HarvesterRole";
+import { StaticMinerRole as StaticHarvesterRole } from "roles/creep_roles/StaticMinerRole";
+import { UpgraderRole } from "roles/creep_roles/UpgraderRole";
 import { ICreepRole } from "../interfaces/ICreepRole";
 import { IRoleManager } from "../interfaces/IRoleManager";
 

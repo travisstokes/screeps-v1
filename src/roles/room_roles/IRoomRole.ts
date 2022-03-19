@@ -1,3 +1,5 @@
+import { ROOM_ROLES_CONSTANT } from "constants/RoomRoleConstants";
+
 export interface IRoomRole {
     run(room: Room): void;
     getRoleName(): string;

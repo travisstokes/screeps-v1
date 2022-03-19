@@ -5,7 +5,7 @@ import { ITowerManager } from 'managers/TowerManager';
 import { ISourceManager } from 'interfaces/ISourceManager';
 import { ICreepRole } from 'interfaces/ICreepRole';
 import { IRouteService } from 'interfaces/IRouteService';
-import { IRoomRole } from 'roles/RoomRoles/IRoomRole';
+import { IRoomRole } from 'roles/room_roles/IRoomRole';
 
 declare interface IGameServices {
   spawnManager: ISpawner,
