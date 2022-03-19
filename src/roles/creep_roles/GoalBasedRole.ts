@@ -15,7 +15,6 @@ export abstract class GoalBasedRole implements ICreepRole {
 
   run(creep: Creep): void {
     for(var goal of this.creepGoals){
-      console.log(`Running goal ${goal.constructor.name} for creep ${creep.id}`);
       if(goal.checkAchieved(creep)) {
         continue;
       }

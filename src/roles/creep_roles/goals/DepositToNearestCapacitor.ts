@@ -2,7 +2,7 @@ import { PerformActOnTargetGoal } from "./PerformActOnTargetGoal";
 
 
 export class DepositToNearestCapacitor extends PerformActOnTargetGoal<AnyOwnedStructure> {
-    actionTriggersWorking: boolean = false;
+    actionTriggersWorking: boolean = true;
     checkAchieved(creep: Creep): boolean {
         return creep.store.energy == 0
             || this.getActionTarget(creep) == null;

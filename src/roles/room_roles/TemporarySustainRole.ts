@@ -2,7 +2,7 @@ import { HARVESTER_ROLE, UPGRADER_ROLE } from "constants/CreepRoleConstants";
 import { ROOM_ROLES_CONSTANT, TEMP_SUSTAIN_CREEPS } from "constants/RoomRoleConstants";
 import { BaseRoomRole } from "./BaseRoomRole";
 import { IRoomGoal } from "./Goals/IRoomGoal";
-import { SustainCreepCountGoal } from "./OptimizeControllerRole";
+import { SustainCreepCountGoal } from "./Goals/SustainCreepCountGoal";
 
 export class TempSustainCreeps extends BaseRoomRole {
     protected roomGoals: IRoomGoal[];
