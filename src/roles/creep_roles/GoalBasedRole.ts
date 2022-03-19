@@ -2,16 +2,28 @@ import { ICreepRole } from "../../interfaces/ICreepRole";
 import { ISpawnData } from "../../interfaces/ISpawnData";
 import { IBodyMatrixEntry } from "../../interfaces/IBodyMatrixEntry";
 import { CREEP_ROLE_CONSTANTS } from "constants/CreepRoleConstants";
+import { ICreepGoal } from "./goals/ICreepGoal";
 
-export abstract class BaseRole implements ICreepRole {
+export abstract class GoalBasedRole implements ICreepRole {
   getRoleName(): CREEP_ROLE_CONSTANTS {
     return this.roleName;
   }
 
   protected abstract roleName: CREEP_ROLE_CONSTANTS;
   protected abstract bodyMatrix: IBodyMatrixEntry[];
+  protected abstract creepGoals: ICreepGoal[];
 
-  abstract run(creep: Creep): void;
+  run(creep: Creep): void {
+    for(var goal of this.creepGoals){
+      if(goal.checkAchieved(creep)) {
+        continue;
+      }
+
+      // TODO: Handle failed progress?
+      goal.attemptProgress(creep);
+      return;
+    }
+  }
 
   getSpawnData(maxEnergy?: number) : ISpawnData {
     var possibles = _.filter(this.bodyMatrix, entry => entry.energyRequired <= (maxEnergy ?? Number.MAX_VALUE))

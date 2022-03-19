@@ -3,7 +3,7 @@ import { IBodyMatrixEntry } from "interfaces/IBodyMatrixEntry";
 import { BaseRole } from "./BaseRole";
 
 export class StaticMinerRole extends BaseRole{
-    roleName: CREEP_ROLE_CONSTANTS = STATIC_MINER_ROLE;
+    protected roleName: CREEP_ROLE_CONSTANTS = STATIC_MINER_ROLE;
 
     bodyMatrix: IBodyMatrixEntry[] = [
         {energyRequired: 700, body: [WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE]}

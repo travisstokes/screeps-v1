@@ -4,7 +4,7 @@ import { ISpawnData } from "interfaces/ISpawnData";
 import { BaseRole } from "./BaseRole";
 
 export class IntraRoomTransportRole extends BaseRole{
-    roleName: CREEP_ROLE_CONSTANTS = INTRA_ROOM_TRANSPORT_ROLE;
+    protected roleName: CREEP_ROLE_CONSTANTS = INTRA_ROOM_TRANSPORT_ROLE;
 
     bodyMatrix: IBodyMatrixEntry[] = [];
     run(creep: Creep): void {

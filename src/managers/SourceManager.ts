@@ -11,6 +11,22 @@ const ADJACENCY_COORDS : ICoordinate[] = [
 ]
 
 export class SourceManager implements ISourceManager {
+    getContainer(sourceId: Id<Source>): StructureContainer | null{
+        var source = Game.getObjectById(sourceId);
+        if(!source) {
+            return null;
+        }
+
+        var metaData = this.getRoomSourcesMetadata(source?.room.name);
+        var sourceData = _.find(metaData, data => data.source.id == sourceId);
+
+        if(!sourceData?.containers.length) {
+            return null;
+        }
+
+        return Game.getObjectById(sourceData.containers[0]) as StructureContainer;
+    }
+
     metadataCache: any = {};
     persistentCacheLoaded: boolean = false;
 
