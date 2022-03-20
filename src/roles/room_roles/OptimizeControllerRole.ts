@@ -7,8 +7,7 @@ import { ImpossibleGoal } from "./Goals/ImpossibleGoal";
 import { SustainCreepCountGoal } from "./Goals/SustainCreepCountGoal";
 import { SustainMaxExtensions } from "./Goals/SustainMaxExtensions";
 import { SustainMaximumMiningAssignments } from "./Goals/SustainMaximumMiningAssignments";
-
-
+import { MaintainSouceContainers } from "./Goals/MaintainSourceContainers";
 
 export class OptimizeControllerRole extends BaseRoomRole {
     protected roomGoals: IRoomGoal[];
@@ -22,7 +21,7 @@ export class OptimizeControllerRole extends BaseRoomRole {
             new SustainCreepCountGoal(UPGRADER_ROLE, 1),
             new SustainMaximumMiningAssignments(),
             new SustainCreepCountGoal(BUILDER_ROLE, 2),
-            // Create 1 container per source for miners (achieved when built)
+            new MaintainSouceContainers(),
             new SustainMaxExtensions(), // Sustain maximum extensions (achieved when all are built, not necessarily full)
             new ReachRCLLevel(3),
             // Create tower (achieved when built)
