@@ -1,4 +1,4 @@
-import { ISourceManager } from "interfaces/ISourceManager";
+import { ISourceManager, SourceContainerData } from "interfaces/ISourceManager";
 import { trim } from "lodash";
 import { ICoordinate } from "../interfaces/ICoordinate";
 import { ISourceMetadata } from "../interfaces/ISourceMetadata";
@@ -11,6 +11,14 @@ const ADJACENCY_COORDS : ICoordinate[] = [
 ]
 
 export class SourceManager implements ISourceManager {
+    getSourceContainerData(room: Room): SourceContainerData[] {
+        return room.find(FIND_SOURCES).map(s => {
+            return <SourceContainerData>{
+                source: s,
+                container: this.getContainer(s.id)
+            }
+        });
+    }
     getContainer(sourceId: Id<Source>): StructureContainer | null{
         var source = Game.getObjectById(sourceId);
         if(!source) {
@@ -136,24 +144,45 @@ export class SourceManager implements ISourceManager {
         return undefined;
     }
 
-    getRecommendedContainerSite(roomName: string, sourceId: Id<Source>): RoomPosition | undefined {
-        // TODO: Finish container site implementation
+    getRecommendedContainerSite(roomName: string, source: Source): RoomPosition | null {
         var sourceMetaData = this.getRoomSourcesMetadata(roomName);
-        var source = sourceMetaData.find(s => s.source.id == sourceId);
+        var sourceData = sourceMetaData.find(s => s.source.id == source.id);
 
-        if (!source) {
+        if (!sourceData) {
             throw new Error("Invalid room source combination");
         }
 
-        if(source.containers.length >= source.assignedCreeps.length) {
-            return undefined;
+        var spacesWithNoContainerCoverage = _.filter(sourceData.availableSpaces,
+            pos => pos.findInRange(FIND_STRUCTURES,  1, {
+                        filter: s => s.structureType == STRUCTURE_CONTAINER
+                    }).length == 0
+        );
+
+        if(spacesWithNoContainerCoverage.length == 0) {
+            return null;
         }
 
-        return undefined;
+        var room = Game.rooms[roomName];
+
+        var target : AnyStructure | undefined;
+
+        if(room.controller) {
+            target = room.controller
+        } else if (room.storage) {
+            target = room.storage
+        } else {
+            target = room.find(FIND_MY_SPAWNS)?.shift();
+        }
+
+        if(!target) {
+            return spacesWithNoContainerCoverage[0];
+        }
+
+        return target.pos.findClosestByPath(spacesWithNoContainerCoverage, {ignoreCreeps: true});
     }
 
     getRoomSourcesMetadata(roomName: string): ISourceMetadata[] {
-        // Caching is currently disabled until I get the creep death event system in place so we can efficiently trigger cache invalidation.
+        // Caching is currently disabled until I get the creep death and building loss event system in place so we can efficiently trigger cache invalidation.
 
         // if(!this.persistentCacheLoaded) {
         //     this.loadCache();
@@ -174,10 +203,10 @@ export class SourceManager implements ISourceManager {
         var result = sources.map((source) => {
             var assignedCreeps = assignedCreepsBySource[source.id] ?? new Array<Creep>();
             var assignedWorkParts = _.sum(assignedCreeps, creep => creep.getActiveBodyparts(WORK));
-            var coordsToCheck = ADJACENCY_COORDS.map<ICoordinate>((coord) => <ICoordinate>{ x: source.pos.x + coord.x, y: source.pos.y + coord.y });
+            var coordsToCheck = ADJACENCY_COORDS.map<RoomPosition>((coord) => new RoomPosition(source.pos.x + coord.x, source.pos.y + coord.y, source.room.name));
             var availableSpaces = coordsToCheck.filter(coord => terrain.get(coord.x, coord.y) != TERRAIN_MASK_WALL);
             var containers = Game.rooms[roomName]
-                .lookForAtArea(LOOK_STRUCTURES, source.pos.x - 1, source.pos.y - 1, source.pos.x + 1, source.pos.y + 1, true)
+                .lookForAtArea(LOOK_STRUCTURES,  source.pos.y - 1, source.pos.x - 1, source.pos.y + 1, source.pos.x + 1, true)
                 .filter(result => result.structure.structureType == STRUCTURE_CONTAINER)
                 .map(result => result.structure.id);
 

@@ -28,6 +28,7 @@ export abstract class BaseRoomRole implements IRoomRole {
                 continue;
             }
 
+            console.log(`Attempting goal ${goal.constructor.name} for room ${room.name}`);
             // TODO: Handle failed progress?
             goal.attemptProgress(room);
             return;
