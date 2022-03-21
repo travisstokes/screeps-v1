@@ -10,12 +10,18 @@ export class MaintainSouceContainers implements IRoomGoal {
 
     checkAchieved(room: Room): boolean {
         var sourceContainerData = Game.services.sourceManager.getSourceContainerData(room)
-        this.sourceContainerDataHash[room.name] = sourceContainerData;
-        return !_.all(sourceContainerData, data => !data.container);
+        var achieved = _.all(sourceContainerData, data => data.container);
+
+        if(!achieved) {
+            this.sourceContainerDataHash[room.name] = sourceContainerData;
+        }
+
+        return achieved;
     }
     attemptProgress(room: Room): boolean {
         try {
             var sourceContainerData = this.sourceContainerDataHash[room.name] ?? Game.services.sourceManager.getSourceContainerData(room);
+            console.log(JSON.stringify(sourceContainerData));
             for(var data of sourceContainerData)
             {
                 if(data.container) {

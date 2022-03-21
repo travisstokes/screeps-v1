@@ -178,7 +178,7 @@ export class SourceManager implements ISourceManager {
             return spacesWithNoContainerCoverage[0];
         }
 
-        return _.min(spacesWithNoContainerCoverage, space => space.getRangeTo(target as AnyStructure))
+        return target.pos.findClosestByPath(spacesWithNoContainerCoverage, {ignoreCreeps: true});
     }
 
     getRoomSourcesMetadata(roomName: string): ISourceMetadata[] {
@@ -206,7 +206,7 @@ export class SourceManager implements ISourceManager {
             var coordsToCheck = ADJACENCY_COORDS.map<RoomPosition>((coord) => new RoomPosition(source.pos.x + coord.x, source.pos.y + coord.y, source.room.name));
             var availableSpaces = coordsToCheck.filter(coord => terrain.get(coord.x, coord.y) != TERRAIN_MASK_WALL);
             var containers = Game.rooms[roomName]
-                .lookForAtArea(LOOK_STRUCTURES, source.pos.x - 1, source.pos.y - 1, source.pos.x + 1, source.pos.y + 1, true)
+                .lookForAtArea(LOOK_STRUCTURES,  source.pos.y - 1, source.pos.x - 1, source.pos.y + 1, source.pos.x + 1, true)
                 .filter(result => result.structure.structureType == STRUCTURE_CONTAINER)
                 .map(result => result.structure.id);
 
