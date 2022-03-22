@@ -10,22 +10,34 @@ import { SustainMaximumMiningAssignments } from "./Goals/SustainMaximumMiningAss
 import { MaintainSouceContainers } from "./Goals/MaintainSourceContainers";
 import { AsyncGoalAll } from "./Goals/AsyncGoalAll";
 
+// export class MaintainStructureGoal implements IRoomGoal {
+//     checkProgress(room: Room): boolean {
+//         throw new Error("Method not implemented.");
+//     }
+//     attemptProgress(room: Room): boolean {
+//         throw new Error("Method not implemented.");
+//     }
+// }
+
 export class OptimizeControllerRole extends BaseRoomRole {
     protected roomGoals: IRoomGoal[];
     protected evolveRole?: ROOM_ROLES_CONSTANT;
     protected devolveRole?: ROOM_ROLES_CONSTANT = NEW_COLONY_ROLE;
     protected roleName: string = OPTIMIZE_CONTROLLER_ROLE;
 
+    // Coming in to Optimize, we have 1 low level miner, 1 low level upgrader and RCL 2
     constructor() {
         super();
         this.roomGoals = [
             new SustainCreepCountGoal(UPGRADER_ROLE, 1),
             new SustainMaximumMiningAssignments(),
-            new SustainCreepCountGoal(BUILDER_ROLE, 2),
-            new MaintainSouceContainers(),
-            new AsyncGoalAll([
-                new SustainMaxExtensions(), // Sustain maximum extensions (achieved when all are built, not necessarily full)
-                new SustainCreepCountGoal(BUILDER_ROLE, 4) // Ramp builders up to 4
+            new AsyncGoalAll([ // Build out two more builders and setup source containers
+                new SustainCreepCountGoal(BUILDER_ROLE, 2),
+                new MaintainSouceContainers()
+            ]),
+            new AsyncGoalAll([ // Build out first wave of extensions (should be 5) and ramp up builders
+                new SustainMaxExtensions(),
+                new SustainCreepCountGoal(BUILDER_ROLE, 4)
             ])
             ,
             new ReachRCLLevel(3),
@@ -42,11 +54,4 @@ export class OptimizeControllerRole extends BaseRoomRole {
             new ReachRCLLevel(6) // Need to fine tune desired RCL level here before evolving into factory mode.
         ];
     }
-
-    // Coming in to Optimize, we have 1 low level miner, 1 low level upgrader and RCL 2
-    // Sustain maximum mining assignment // TODO: Update miners to prioritize source adjacent containers over spawners/extensions and let builders transport in early stages
-    // Sustain 2 upgraders
-    // Sustain 2 builders // TODO: Add support for builders transporting energy from source to buildings (extensions, spawn, ).
-
-    // TODO: Implement OptimizeController goals
 }

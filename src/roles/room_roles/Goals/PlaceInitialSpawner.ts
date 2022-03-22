@@ -1,10 +1,10 @@
-import { IRoomGoal } from "./IRoomGoal";
+import { IGoalProgress, IRoomGoal } from "./IRoomGoal";
 
 export class PlaceInitialSpawner implements IRoomGoal {
-    checkAchieved(room: Room): boolean {
-        return room.getAllSpawners().length > 0;
+    checkProgress(room: Room): IGoalProgress {
+        return { achieved: room.getAllSpawners().length > 0 };
     }
-    attemptProgress(room: Room): boolean {
+    attemptProgress(room: Room, progress: IGoalProgress): boolean {
         if (room.isBeingConstructed(STRUCTURE_SPAWN)) {
             return true;
         }

@@ -1,29 +1,35 @@
-import { IRoomGoal } from "./IRoomGoal";
+import { getServers } from "dns";
+import { IGoalProgress, IRoomGoal } from "./IRoomGoal";
+
+interface AsyncGoalResult {
+    goal: IRoomGoal,
+    state: IGoalProgress
+}
 
 export class AsyncGoalAll implements IRoomGoal {
     private goals: IRoomGoal[];
-
-    // TODO: Temporary; ideally we'd be able to count on the source manager to cache this stuff correctly like a proper data/service layer.
-    private achievedGoalsHash: {
-        [roomName: string]: boolean[]
-    } = {};
 
     constructor(goals: IRoomGoal[]) {
         this.goals = goals;
     }
 
-    checkAchieved(room: Room): boolean {
-        this.achievedGoalsHash[room.name] = this.goals.map(g => g.checkAchieved(room));
-        return _.all(this.achievedGoalsHash[room.name]);
-    }
-    attemptProgress(room: Room): boolean {
-        var achievedGoalsArray = this.achievedGoalsHash[room.name];
+    checkProgress(room: Room): IGoalProgress {
+        var goalResults = this.goals.map(g => <AsyncGoalResult>{ goal: g, state: g.checkProgress(room) });
+        var achieved = _.all(goalResults, result => result.state.achieved);
 
-        for(var index in achievedGoalsArray){
-            if(achievedGoalsArray[index]) {
+        return {
+            achieved: achieved,
+            state: goalResults
+        }
+    }
+    attemptProgress(room: Room, goalProgress: IGoalProgress): boolean {
+        var asyncResults = goalProgress.state as AsyncGoalResult[];
+        for(var result of asyncResults){
+            if(result.state.achieved) {
                 continue;
             }
-            this.goals[index].attemptProgress(room);
+
+            result.goal.attemptProgress(room, result.state);
         }
 
         return true;

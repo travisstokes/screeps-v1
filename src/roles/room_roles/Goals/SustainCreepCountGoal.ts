@@ -10,7 +10,7 @@ export class SustainCreepCountGoal extends BaseSustainCreepGoal {
         this.amountToSustain = amountToSustain;
     }
 
-    checkAchieved(room: Room): boolean {
+    hasSufficientCreeps(room: Room): boolean {
         return room.countActiveCreeps([this.roleAccessor(room)]) >= this.amountToSustain;
     }
 }

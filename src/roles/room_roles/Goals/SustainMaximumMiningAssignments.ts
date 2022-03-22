@@ -9,7 +9,7 @@ export class SustainMaximumMiningAssignments extends BaseSustainCreepGoal {
         super(roleAccessor);
     }
 
-    checkAchieved(room: Room): boolean {
+    hasSufficientCreeps(room: Room): boolean {
         return Game.services.sourceManager.getAvailableWorkstations(room) == 0;
     }
 }

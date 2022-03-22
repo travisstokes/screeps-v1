@@ -1,11 +1,11 @@
-import { IRoomGoal } from "./IRoomGoal";
+import { IGoalProgress, IRoomGoal } from "./IRoomGoal";
 
 
 export class ImpossibleGoal implements IRoomGoal {
-    checkAchieved(room: Room): boolean {
-        return false;
+    checkProgress(room: Room): IGoalProgress {
+        return { achieved: false };
     }
-    attemptProgress(room: Room): boolean {
+    attemptProgress(room: Room, progress: IGoalProgress): boolean {
         return true;
     }
 }

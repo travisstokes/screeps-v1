@@ -1,4 +1,4 @@
-import { IRoomGoal } from "./IRoomGoal";
+import { IGoalProgress, IRoomGoal } from "./IRoomGoal";
 
 export class ReachRCLLevel implements IRoomGoal {
     protected level: number;
@@ -6,10 +6,10 @@ export class ReachRCLLevel implements IRoomGoal {
     constructor(level: number) {
         this.level = level;
     }
-    checkAchieved(room: Room): boolean {
-        return (room.controller?.level ?? 0) >= this.level;
+    checkProgress(room: Room): IGoalProgress {
+        return { achieved: (room.controller?.level ?? 0) >= this.level };
     }
-    attemptProgress(room: Room): boolean {
+    attemptProgress(room: Room, progress: IGoalProgress): boolean {
         return true;
     }
 }

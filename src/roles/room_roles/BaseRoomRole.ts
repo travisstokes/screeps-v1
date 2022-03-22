@@ -22,15 +22,15 @@ export abstract class BaseRoomRole implements IRoomRole {
     }
 
     run(room: Room): void {
-        // TODO: Add dependency tree and async progress support.
         for(var goal of this.roomGoals) {
-            if(goal.checkAchieved(room)) {
+            var progress = goal.checkProgress(room);
+            if(progress.achieved) {
                 continue;
             }
 
             console.log(`Attempting goal ${goal.constructor.name} for room ${room.name}`);
             // TODO: Handle failed progress?
-            goal.attemptProgress(room);
+            goal.attemptProgress(room, progress);
             return;
         }
 

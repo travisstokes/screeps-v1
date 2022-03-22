@@ -1,10 +1,10 @@
 import { CREEP_ROLE_CONSTANTS } from "constants/CreepRoleConstants";
 import { isFunction } from "lodash";
-import { IRoomGoal } from "./IRoomGoal";
+import { IGoalProgress, IRoomGoal } from "./IRoomGoal";
 
 export type GetCreepRoleFunction = (room: Room) => CREEP_ROLE_CONSTANTS;
 export abstract class BaseSustainCreepGoal implements IRoomGoal {
-    abstract checkAchieved(room: Room): boolean;
+    abstract hasSufficientCreeps(room: Room): boolean;
     roleAccessor: GetCreepRoleFunction;
 
     constructor(roleAccessor: CREEP_ROLE_CONSTANTS | GetCreepRoleFunction) {
@@ -16,7 +16,11 @@ export abstract class BaseSustainCreepGoal implements IRoomGoal {
         this.roleAccessor = (room: Room) => (roleAccessor as CREEP_ROLE_CONSTANTS);
     }
 
-    attemptProgress(room: Room): boolean {
+    checkProgress(room: Room) : IGoalProgress {
+        return { achieved: this.hasSufficientCreeps(room) };
+    }
+
+    attemptProgress(room: Room, progress: IGoalProgress): boolean {
         var roleToTarget = this.roleAccessor(room);
 
         if (room.countSpawningCreeps([roleToTarget]) > 0) {
